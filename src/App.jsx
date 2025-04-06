@@ -17,7 +17,6 @@ function App() {
       });
     });
   }, []);
-  // console.log(location);
 
   useEffect(() => {
     if (location) {
