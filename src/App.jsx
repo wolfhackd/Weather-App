@@ -9,8 +9,6 @@ function App() {
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition((position) => {
-      // console.log(position.coords.latitude);
-      // console.log(position.coords.longitude);
       setLocation({
         lat: position.coords.latitude,
         lon: position.coords.longitude,
@@ -20,17 +18,20 @@ function App() {
 
   useEffect(() => {
     if (location) {
-      const fetchWeatherData = async () => {
+      const fetchForecastData = async () => {
         try {
-          const responde = await axios.get(
-            `http://api.weatherapi.com/v1/current.json?key=${API_KEY}&q=${location.lat},${location.lon}&aqi=no`
+          const response = await axios.get(
+            `http://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&q=${location.lat},${location.lon}&days=7`
           );
-          setInfo(responde.data);
+
+          // console.log(response.data);
+          setInfo(response.data);
         } catch (err) {
-          console.error(err);
+          console.error("Error fetching forecast data.", err);
+          setInfo(null);
         }
       };
-      fetchWeatherData();
+      fetchForecastData();
     }
   }, [location]);
   // Apenas no desenvolvimento

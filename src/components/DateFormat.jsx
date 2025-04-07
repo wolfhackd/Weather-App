@@ -55,6 +55,7 @@ const DateFormat = () => {
     }
 
     getCurrentDate();
+    getCurrentHours();
     const interval = setInterval(() => {
       getCurrentHours();
     }, 10000);
