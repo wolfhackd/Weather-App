@@ -9,7 +9,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "../index.css";
 
-const Status = (props) => {
+const WeatherDetails = (props) => {
   const [forecast, setForecast] = useState(null);
   const [day, setDay] = useState(null);
 
@@ -17,15 +17,22 @@ const Status = (props) => {
     if (props?.data?.forecast) {
       setForecast(props.data.forecast);
       setDay(props.data.current);
-      console.log(forecast);
+      // console.log(forecast);
     }
-  }, [props]);
+  }, [props.data]);
 
-  const dataFormat = (data) => {
-    const [year, month, day] = data.split("-");
-    const dataFormated = `${day}-${month}-${year}`;
-    return dataFormated;
-  };
+  const dataFormat = (data) => data.split("-").reverse().join("-");
+  // Linha de informações
+  const InfoRow = ({ label, value, icon, iconClass }) => (
+    <div className="flex justify-between items-center">
+      <p>{label}</p>
+      <div className="flex items-center gap-4">
+        <p>{value}</p>
+        <FontAwesomeIcon icon={icon} className={iconClass} />
+      </div>
+    </div>
+  );
+
   return (
     <>
       <div className="flex flex-col bg-white/30 backdrop-blur-md h-screen overflow-hidden pl-6 pr-40 pt-6 text-white">
@@ -44,54 +51,35 @@ const Status = (props) => {
           <p className="my-6">Weather Details...</p>
           <div className="flex flex-col justify-between gap-8 text-gray-200">
             <p className="py-4 font-bold uppercase text-white">
-              thunderstorm with light drizzle
+              {forecast?.forecastday[0]?.day?.condition?.text}
             </p>
 
-            <div className="flex justify-between items-center">
-              <p>Temp max</p>
-              <div className="flex items-center gap-4">
-                <p>{forecast?.forecastday[0]?.day?.maxtemp_c}</p>
-                <FontAwesomeIcon
-                  icon={faTemperatureQuarter}
-                  className="text-red-300"
-                />
-              </div>
-            </div>
+            <InfoRow
+              label="Temp max"
+              value={`${forecast?.forecastday[0]?.day?.maxtemp_c}°`}
+              icon={faTemperatureQuarter}
+              iconClass="text-red-300"
+            />
+            <InfoRow
+              label="Temp min"
+              value={`${forecast?.forecastday[0]?.day?.mintemp_c}°`}
+              icon={faTemperatureQuarter}
+              iconClass="text-blue-300"
+            />
 
-            <div className="flex justify-between items-center">
-              <p>Temp min</p>
-              <div className="flex items-center gap-4">
-                <p>{forecast?.forecastday[0]?.day?.mintemp_c}</p>
-                <FontAwesomeIcon
-                  icon={faTemperatureQuarter}
-                  className="text-blue-300"
-                />
-              </div>
-            </div>
+            <InfoRow
+              label="Humidity"
+              value={`${day?.humidity}%`}
+              icon={faDroplet}
+            />
 
-            <div className="flex justify-between items-center">
-              <p>Humadity</p>
-              <div className="flex items-center gap-4">
-                <p>{day?.humidity}%</p>
-                <FontAwesomeIcon icon={faDroplet} />
-              </div>
-            </div>
+            <InfoRow label="Cloudy" value={`${day?.cloud}%`} icon={faCloud} />
 
-            <div className="flex justify-between items-center">
-              <p>Cloudy</p>
-              <div className="flex items-center gap-4">
-                <p>{day?.cloud}%</p>
-                <FontAwesomeIcon icon={faCloud} />
-              </div>
-            </div>
-
-            <div className="flex justify-between items-center">
-              <p>Wind</p>
-              <div className="flex items-center gap-4">
-                <p>{day?.wind_kph}km/h</p>
-                <FontAwesomeIcon icon={faWind} />
-              </div>
-            </div>
+            <InfoRow
+              label="Wind"
+              value={`${day?.wind_kph}km/h`}
+              icon={faWind}
+            />
           </div>
         </div>
         {/* tenho que tirar o scroll */}
@@ -102,7 +90,10 @@ const Status = (props) => {
             {forecast?.forecastday.map((day, index) => {
               return (
                 <div key={index} className="flex gap-6 w-full">
-                  <img src={day.day.condition.icon} alt="" />
+                  <img
+                    src={day.day.condition.icon}
+                    alt={day.day.condition.text}
+                  />
                   <div className="flex w-full">
                     <div className="flex flex-col">
                       <span>{dataFormat(day.date)}</span>
@@ -135,4 +126,4 @@ const Status = (props) => {
   );
 };
 
-export default Status;
+export default WeatherDetails;

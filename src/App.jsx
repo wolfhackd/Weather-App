@@ -5,6 +5,8 @@ import axios from "axios";
 function App() {
   const [location, setLocation] = useState("");
   const [info, setInfo] = useState("");
+  // crie um .env no arquivo raiz com VITE_API_KEY=key
+  //para o código funcionar
   const API_KEY = import.meta.env.VITE_API_KEY;
 
   useEffect(() => {

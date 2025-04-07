@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import backgroundImage from "../assets/bg-weather.png";
 import DateFormat from "../components/DateFormat";
-import Status from "../components/Status";
+import WeatherDetails from "../components/WeatherDetails";
 
 const Home = (info) => {
   const [city, setCity] = useState("Null");
@@ -15,9 +15,8 @@ const Home = (info) => {
       let temp = info.data.current.temp_c;
       temp = String(temp).split(".")[0].slice(0, 2);
       setTemperature(temp);
-
       setImage(info.data.current.condition.icon);
-      // console.log(info.data.forecast.forecastday[0].day);
+      console.log(info);
     }
   }, [info]);
 
@@ -54,10 +53,14 @@ const Home = (info) => {
                     <DateFormat />
                   </div>
                 </div>
-                <img src={image} alt="" className="w-20 h-20" />
+                <img
+                  src={image}
+                  alt={info?.data?.current?.condition?.text}
+                  className="w-20 h-20"
+                />
               </div>
             </div>
-            <Status data={info.data} />
+            <WeatherDetails data={info.data} />
           </div>
         </section>
       );
